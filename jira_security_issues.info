@@ -1,0 +1,6 @@
+name = JIRA Security Issue Creator
+description = "Sends security alerts to JIRA for updates"
+core = 7.x
+package = "Reports"
+dependencies[] = jira_rest
+dependencies[] = update

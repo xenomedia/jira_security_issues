@@ -1,0 +1,48 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: michaelpporter
+ * Date: 5/25/16
+ * Time: 1:14 PM
+ */
+
+
+function jira_security_issues_menu() {
+
+  $items['admin/config/services/jira'] = array(
+    'title' => 'JIRA Open Issues',
+    'description' => 'Get a status report about open JIRA tasks',
+    'page callback' => 'jira_security_issues_status',
+    'access arguments' => array('administer site configuration'),
+    'weight' => -50,
+    'file' => 'jira_security_issues.report.inc',
+  );
+  $items['admin/config/services/jira/list'] = array(
+    'title' => 'List',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/config/services/jira/settings'] = array(
+    'title' => 'Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('jira_security_issues_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'jira_security_issues.settings.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 50,
+  );
+  return $items;
+}
+
+
+/**
+ * Implements hook_cron().
+ */
+function jira_security_issues_cron() {
+  $frequency = variable_get('jira_security_issues_check_frequency', 1);
+  $interval = 60 * 60 * 24 * $frequency;
+  if ((REQUEST_TIME - variable_get('jira_security_issues_check', 0)) > $interval) {
+    // Check for new updates and add them to JIRA
+    jira_security_issues_send_to_jira();
+  }
+}
