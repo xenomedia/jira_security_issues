@@ -9,7 +9,7 @@
 
 function jira_security_issues_menu() {
 
-  $items['admin/config/services/jira'] = array(
+  $items['admin/reports/jira_security_issues'] = array(
     'title' => 'JIRA Open Issues',
     'description' => 'Get a status report about open JIRA tasks',
     'page callback' => 'jira_security_issues_status',
@@ -17,12 +17,12 @@ function jira_security_issues_menu() {
     'weight' => -50,
     'file' => 'jira_security_issues.report.inc',
   );
-  $items['admin/config/services/jira/list'] = array(
+  $items['admin/reports/jira_security_issues/list'] = array(
     'title' => 'List',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/config/services/jira/settings'] = array(
+  $items['admin/reports/jira_security_issues/settings'] = array(
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('jira_security_issues_settings'),
