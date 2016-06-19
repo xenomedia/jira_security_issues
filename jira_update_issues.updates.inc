@@ -32,11 +32,11 @@ function jira_update_issues_send_to_jira() {
           $summary = 'Update ' . $value['name'] . ' to ' . $value['recommended'];
           $issuetypeid = 2;
           if ($value['status'] == 1) {
-            $summary = '[SECURITY] ' . $summary;
+            $summary = 'SECURITY ' . $summary;
             $issuetypeid = 1;
           }
           if ($value['status'] == 4) {
-            $summary = '[RELEASE] ' . $summary;
+            $summary = 'RELEASE ' . $summary;
             $issuetypeid = 2;
           }
 
