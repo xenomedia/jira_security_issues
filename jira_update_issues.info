@@ -1,0 +1,6 @@
+name = JIRA Update Issue Creator
+description = "Sends update alerts to JIRA for updates"
+core = 7.x
+package = "Reports"
+dependencies[] = jira_rest
+dependencies[] = update

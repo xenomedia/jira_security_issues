@@ -7,16 +7,16 @@
  */
 
 
-function jira_security_issues_send_to_jira() {
+function jira_update_issues_send_to_jira() {
   $now = time();
-  variable_set('jira_security_issues_last_check', $now);
+  variable_set('jira_update_issues_last_check', $now);
 
   if ($available = update_get_available(TRUE)) {
     module_load_include('inc', 'update', 'update.compare');
     $data = update_calculate_project_data($available);
 
     $count = 0;
-    $project_code = variable_get('jira_security_issues_project_code', '');
+    $project_code = variable_get('jira_update_issues_project_code', '');
     $foundissues = jira_rest_project_get();
     foreach ($foundissues as $key => $value) {
       if ($value->key == $project_code) {
@@ -27,13 +27,16 @@ function jira_security_issues_send_to_jira() {
 
     foreach ($data as $key => $value) {
       if (isset($value['info']['version']) && $value['info']['version'] <> $value['recommended']) {
-        if ($value['status'] == 1 || $value['status'] == 4) {
+        $security_level = variable_get('jira_update_issues_level', 4);
+        if ($value['status'] == 1 || ($value['status'] == 4 && $security_level == 4)) {
           $summary = 'Update ' . $value['name'] . ' to ' . $value['recommended'];
           $issuetypeid = 2;
           if ($value['status'] == 1) {
+            $summary = '[SECURITY] ' . $summary;
             $issuetypeid = 1;
           }
           if ($value['status'] == 4) {
+            $summary = '[RELEASE] ' . $summary;
             $issuetypeid = 2;
           }
 
@@ -48,6 +51,7 @@ function jira_security_issues_send_to_jira() {
                   'description' => $summary,
                   'priority'    => array('id' => (string) $value['status'],),
                   'issuetype'   => array('id' => (string) $issuetypeid,),
+                  'labels'      => array($value['name']),
                 ),
               );
 

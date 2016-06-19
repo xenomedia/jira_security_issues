@@ -7,27 +7,27 @@
  */
 
 
-function jira_security_issues_menu() {
+function jira_update_issues_menu() {
 
-  $items['admin/reports/jira_security_issues'] = array(
+  $items['admin/reports/jira_update_issues'] = array(
     'title' => 'JIRA Open Issues',
     'description' => 'Get a status report about open JIRA tasks',
-    'page callback' => 'jira_security_issues_status',
+    'page callback' => 'jira_update_issues_status',
     'access arguments' => array('administer site configuration'),
     'weight' => -50,
-    'file' => 'jira_security_issues.report.inc',
+    'file' => 'jira_update_issues.report.inc',
   );
-  $items['admin/reports/jira_security_issues/list'] = array(
+  $items['admin/reports/jira_update_issues/list'] = array(
     'title' => 'List',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/reports/jira_security_issues/settings'] = array(
+  $items['admin/reports/jira_update_issues/settings'] = array(
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('jira_security_issues_settings'),
+    'page arguments' => array('jira_update_issues_settings'),
     'access arguments' => array('administer site configuration'),
-    'file' => 'jira_security_issues.settings.inc',
+    'file' => 'jira_update_issues.settings.inc',
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
@@ -38,12 +38,12 @@ function jira_security_issues_menu() {
 /**
  * Implements hook_cron().
  */
-function jira_security_issues_cron() {
-  module_load_include('inc','jira_security_issues','jira_security_issues.updates');
-  $frequency = variable_get('jira_security_issues_check_frequency', 1);
+function jira_update_issues_cron() {
+  module_load_include('inc','jira_update_issues','jira_update_issues.updates');
+  $frequency = variable_get('jira_update_issues_check_frequency', 1);
   $interval = 60 * 60 * 24 * $frequency;
-  if ((REQUEST_TIME - variable_get('jira_security_issues_check', 0)) > $interval) {
+  if ((REQUEST_TIME - variable_get('jira_update_issues_check', 0)) > $interval) {
     // Check for new updates and add them to JIRA
-    jira_security_issues_send_to_jira();
+    jira_update_issues_send_to_jira();
   }
 }

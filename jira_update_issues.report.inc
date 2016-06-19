@@ -10,10 +10,10 @@ function issetor(&$var, $default = false) {
 /**
  * Page callback: Generates a page about the update status of projects.
  *
- * @see jira_security_issues_menu()
+ * @see jira_update_issues_menu()
  */
-function jira_security_issues_status() {
-  $project_code = variable_get('jira_security_issues_project_code', '');
+function jira_update_issues_status() {
+  $project_code = variable_get('jira_update_issues_project_code', '');
   $found_issues = jira_rest_issue_search('project = "' . $project_code . '" and resolution = Unresolved ORDER BY updatedDate ASC');
   $header = array('Key', 'Status', 'Summary', 'Description', 'Reporter', 'Assignee');
   $rows = array();
