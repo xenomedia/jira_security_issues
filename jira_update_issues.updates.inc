@@ -26,9 +26,15 @@ function jira_update_issues_send_to_jira() {
     }
 
     foreach ($data as $key => $value) {
-      if (isset($value['info']['version']) && $value['info']['version'] <> $value['recommended']) {
+      if (isset($value['info']['version']) && !empty($value['info']['version'])
+        && isset($value['recommended']) && !empty($value['recommended'])
+        && $value['info']['version'] <> $value['recommended']
+      ) {
         $security_level = variable_get('jira_update_issues_level', 4);
-        if ($value['status'] == 1 || ($value['status'] == 4 && $security_level == 4)) {
+        if ($value['status'] == 1
+          || ($value['status'] == 4
+            && $security_level == 4)
+        ) {
           $summary = 'Update ' . $value['name'] . ' to ' . $value['recommended'];
           $issuetypeid = 2;
           if ($value['status'] == 1) {
@@ -41,17 +47,18 @@ function jira_update_issues_send_to_jira() {
           }
 
 
-          $foundissues = jira_rest_issue_search('summary ~  "' . $summary . '" AND project = ' . $project_code . ' ORDER BY updatedDate DESC');
+          $foundissues = jira_rest_issue_search('summary ~  "' . $summary .
+            '" AND project = ' . $project_code . ' ORDER BY updatedDate DESC');
           if (!count($foundissues)) {
             $issuedata =
               array(
                 'fields' => array(
-                  'project'     => array('id' => $project_id,),
-                  'summary'     => $summary,
+                  'project' => array('id' => $project_id,),
+                  'summary' => $summary,
                   'description' => $summary,
-                  'priority'    => array('id' => (string) $value['status'],),
-                  'issuetype'   => array('id' => (string) $issuetypeid,),
-                  'labels'      => array($value['name']),
+                  'priority' => array('id' => (string) $value['status'],),
+                  'issuetype' => array('id' => (string) $issuetypeid,),
+                  'labels' => array($value['name']),
                 ),
               );
 
